@@ -30,9 +30,19 @@ namespace UserOnboardingApi.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
+            // Basic email format validation
+            if (string.IsNullOrWhiteSpace(user.Email) || !user.Email.Contains("@") || !user.Email.Contains("."))
+                return BadRequest("Invalid email format.");
+
+            // Password strength validation (min 8 chars, at least one number and one letter)
+            if (string.IsNullOrWhiteSpace(user.PasswordHash) || user.PasswordHash.Length < 8 ||
+                !user.PasswordHash.Any(char.IsDigit) || !user.PasswordHash.Any(char.IsLetter))
+                return BadRequest("Password must be at least 8 characters and contain both letters and numbers.");
+
             if (await _context.Users.AnyAsync(u => u.Email == user.Email))
                 return BadRequest("Email already exists.");
 
+            // Hash password before persisting
             user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(user.PasswordHash);
             user.Status = UserStatus.Pending;
             _context.Users.Add(user);

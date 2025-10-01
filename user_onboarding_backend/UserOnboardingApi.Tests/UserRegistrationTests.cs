@@ -3,6 +3,8 @@ using UserOnboardingApi.Models;
 using UserOnboardingApi.Data;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 
 namespace UserOnboardingApi.Tests
 {
@@ -33,11 +35,13 @@ namespace UserOnboardingApi.Tests
         public async Task RegisterUser_DuplicateEmail_ShouldFail()
         {
             var db = GetDbContext();
-            db.Users.Add(new User { Email = "test@example.com", PasswordHash = "hashed" });
-            await db.SaveChangesAsync();
-
-            db.Users.Add(new User { Email = "test@example.com", PasswordHash = "hashed2" });
-            await Assert.ThrowsAsync<DbUpdateException>(async () => await db.SaveChangesAsync());
+            var config = new ConfigurationBuilder().AddInMemoryCollection(new List<KeyValuePair<string, string?>> { new KeyValuePair<string, string?>("Jwt:Key", "testkey") }).Build();
+            var controller = new UserOnboardingApi.Controllers.AuthController(db, config);
+            var user1 = new User { Email = "test@example.com", PasswordHash = "Password1" };
+            await controller.Register(user1);
+            var user2 = new User { Email = "test@example.com", PasswordHash = "Password2" };
+            var result = await controller.Register(user2);
+            Assert.IsType<BadRequestObjectResult>(result);
         }
     }
 }

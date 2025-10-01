@@ -1,0 +1,60 @@
+version: '3.8'
+services:
+  backend:
+    build:
+      context: ./user_onboarding_backend/UserOnboardingApi
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__DefaultConnection=${DB_CONNECTION_STRING}
+      - Jwt__Key=${JWT_KEY}
+    ports:
+      - "5000:80"
+    depends_on:
+      - db
+    networks:
+      - onboarding-net
+
+  frontend:
+    build:
+      context: ./user_onboarding_frontend
+    environment:
+      - REACT_APP_API_URL=http://backend:80
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - onboarding-net
+
+  workflow:
+    build:
+      context: ./user_onboarding_workflow/UserOnboardingWorkflow
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__DefaultConnection=${DB_CONNECTION_STRING}
+      - ServiceBus__ConnectionString=${SERVICEBUS_CONNECTION_STRING}
+      - ServiceBus__QueueName=${SERVICEBUS_QUEUE_NAME}
+    depends_on:
+      - db
+    networks:
+      - onboarding-net
+
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=${SA_PASSWORD}
+    ports:
+      - "1433:1433"
+    networks:
+      - onboarding-net
+    volumes:
+      - dbdata:/var/opt/mssql
+
+networks:
+  onboarding-net:
+    driver: bridge
+
+volumes:
+  dbdata:
+    driver: local

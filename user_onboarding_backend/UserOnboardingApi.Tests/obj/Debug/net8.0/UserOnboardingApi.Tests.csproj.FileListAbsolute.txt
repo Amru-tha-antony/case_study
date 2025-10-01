@@ -1,0 +1,7 @@
+/workspaces/case_study/user_onboarding_backend/UserOnboardingApi.Tests/bin/Debug/net8.0/CoverletSourceRootsMapping_UserOnboardingApi.Tests
+/workspaces/case_study/user_onboarding_backend/UserOnboardingApi.Tests/obj/Debug/net8.0/UserOnboardingApi.Tests.csproj.AssemblyReference.cache
+/workspaces/case_study/user_onboarding_backend/UserOnboardingApi.Tests/obj/Debug/net8.0/UserOnboardingApi.Tests.GeneratedMSBuildEditorConfig.editorconfig
+/workspaces/case_study/user_onboarding_backend/UserOnboardingApi.Tests/obj/Debug/net8.0/UserOnboardingApi.Tests.AssemblyInfoInputs.cache
+/workspaces/case_study/user_onboarding_backend/UserOnboardingApi.Tests/obj/Debug/net8.0/UserOnboardingApi.Tests.AssemblyInfo.cs
+/workspaces/case_study/user_onboarding_backend/UserOnboardingApi.Tests/obj/Debug/net8.0/UserOnboardingApi.Tests.csproj.CoreCompileInputs.cache
+/workspaces/case_study/user_onboarding_backend/UserOnboardingApi.Tests/obj/Debug/net8.0/UserOnboardingApi.Tests.sourcelink.json
